@@ -72,29 +72,33 @@ namespace AdoptiverseAPI.Controllers
             return new JsonResult(shelter);
         }
 
-        //[HttpPut("{bookId}")]
-        //public ActionResult UpdateBook(int bookId, Book book)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
+        [HttpPut("{shelterId}")]
+        public ActionResult UpdateShelter(int shelterId, Shelter shelter)
+        {
+            if (!ModelState.IsValid)
+            {
 
-        //        return BadRequest();
-        //    }
+                return BadRequest();
+            }
 
-        //    Book existingBook = _context.Books.Find(bookId);
+            Shelter existingShelter = _context.Shelters.Find(shelterId);
 
-        //    if (existingBook == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (existingShelter == null)
+            {
+                return NotFound();
+            }
 
-        //    existingBook.Title = book.Title;
-        //    existingBook.Description = book.Description;
-        //    _context.SaveChanges();
+            existingShelter.Name = shelter.Name;
+            existingShelter.Rank = shelter.Rank;
+            existingShelter.City = shelter.City;
+            existingShelter.FosterProgram = shelter.FosterProgram;
 
 
-        //    Response.StatusCode = 204;
-        //    return new JsonResult(existingBook);
-        //}
+            _context.SaveChanges();
+
+
+            Response.StatusCode = 204;
+            return new JsonResult(existingShelter);
+        }
     }
 }

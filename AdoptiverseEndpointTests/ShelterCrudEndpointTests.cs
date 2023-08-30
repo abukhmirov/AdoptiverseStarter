@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using System.Text;
+using System.Net.Http.Json;
 
 namespace AdoptiverseEndpointTests
 {
@@ -111,6 +112,32 @@ namespace AdoptiverseEndpointTests
 
 
 
+
+        [Fact]
+        public async void PutShelter_UpdatesDatabaseRecord()
+        {
+            Shelter shelter1 = new Shelter { CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now, FosterProgram = true, Rank = 1, City = "Denver", Name = "Dumb Friends League" };
+
+            AdoptiverseApiContext context = GetDbContext();
+            context.Shelters.Add(shelter1);
+            context.SaveChanges();
+
+            HttpClient client = _factory.CreateClient();
+            var jsonString = "{\"createdAt\": \"2023-08-29T12:00:00.000Z\", \"updatedAt\": \"2023-08-29T12:05:00.000Z\", \"fosterProgram\": true, \"rank\": 1, \"city\": \"San Francisco\", \"name\": \"Happy Paws\"}";
+
+            var requestContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
+
+
+            var response = await client.PutAsync("/api/shelters/1", requestContent);
+
+
+
+            // Clear all previously tracked DB objects to get a new copy of the updated book
+            context.ChangeTracker.Clear();
+
+            Assert.Equal(204, (int)response.StatusCode);
+            Assert.Equal("Happy Paws", context.Shelters.Find(1).Name);
+        }
 
 
 
