@@ -28,7 +28,7 @@ namespace AdoptiverseAPI.Controllers
             return _context.Shelters;
 
             // We could manually set the response code like this:
-            //Response.StatusCode = 200;
+            Response.StatusCode = 200;
 
             // API endpoints should return JSON, we are creating a new JSON result with our list of books.
 
@@ -54,7 +54,7 @@ namespace AdoptiverseAPI.Controllers
 
 
 
-        //Create
+
         [HttpPost]
         public ActionResult CreateShelter(Shelter shelter)
         {
@@ -72,33 +72,29 @@ namespace AdoptiverseAPI.Controllers
             return new JsonResult(shelter);
         }
 
-        [HttpPut("{shelterId}")]
-        public ActionResult UpdateShelter(int shelterId, Shelter shelter)
-        {
-            if (!ModelState.IsValid)
-            {
+        //[HttpPut("{bookId}")]
+        //public ActionResult UpdateBook(int bookId, Book book)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
 
-                return BadRequest();
-            }
+        //        return BadRequest();
+        //    }
 
-            Shelter existingShelter = _context.Shelters.Find(shelterId);
+        //    Book existingBook = _context.Books.Find(bookId);
 
-            if (existingShelter == null)
-            {
-                return NotFound();
-            }
+        //    if (existingBook == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            existingShelter.Name = shelter.Name;
-            existingShelter.Rank = shelter.Rank;
-            existingShelter.City = shelter.City;
-            existingShelter.FosterProgram = shelter.FosterProgram;
-
-
-            _context.SaveChanges();
+        //    existingBook.Title = book.Title;
+        //    existingBook.Description = book.Description;
+        //    _context.SaveChanges();
 
 
-            //Response.StatusCode = 204;
-            return new JsonResult(existingShelter);
-        }
+        //    Response.StatusCode = 204;
+        //    return new JsonResult(existingBook);
+        //}
     }
 }
