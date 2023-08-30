@@ -6,6 +6,7 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net.Http.Json;
+using System.Net;
 
 namespace AdoptiverseEndpointTests
 {
@@ -137,6 +138,33 @@ namespace AdoptiverseEndpointTests
 
             Assert.Equal(204, (int)response.StatusCode);
             Assert.Equal("Happy Paws", context.Shelters.Find(1).Name);
+        }
+
+
+
+
+        [Fact]
+        public async Task DeleteShelter_DeletesExistingShelter()
+        {
+            // Arrange
+
+            Shelter existingShelter = new Shelter { CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now, FosterProgram = true, Rank = 1, City = "Denver", Name = "Dumb Friends League" };
+
+            AdoptiverseApiContext context = GetDbContext();
+
+            HttpClient client = _factory.CreateClient();
+
+            context.Shelters.Add(existingShelter);
+            context.SaveChanges();
+
+            // Act
+            HttpResponseMessage response = await client.DeleteAsync($"/api/shelters/{existingShelter.Id}");
+            string content = await response.Content.ReadAsStringAsync();
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            
+            Assert.DoesNotContain("Dumb Friends League", content);
         }
 
 

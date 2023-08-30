@@ -100,5 +100,24 @@ namespace AdoptiverseAPI.Controllers
             Response.StatusCode = 204;
             return new JsonResult(existingShelter);
         }
+
+
+        [HttpDelete("{shelterId}")]
+        public ActionResult DeleteShelter(int shelterId)
+        {
+            Shelter existingShelter = _context.Shelters.Find(shelterId);
+
+            if (existingShelter == null)
+            {
+                return NotFound();
+            }
+
+            _context.Shelters.Remove(existingShelter);
+            _context.SaveChanges();
+
+            //return NoContent();
+            return new JsonResult(_context.Shelters);
+
+        }
     }
 }
